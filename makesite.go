@@ -1,28 +1,17 @@
 package main
 
-<<<<<<< HEAD
 import (
+	"fmt"
 	"io/ioutil"
 )
 
 func main() {
-
-}
-
-func readFile() string {
 	fileContents, err := ioutil.ReadFile("first-post.txt")
 	if err != nil {
+		// A common use of `panic` is to abort if a function returns an error
+		// value that we don’t know how to (or want to) handle. This example
+		// panics if we get an unexpected error when creating a new file.
 		panic(err)
 	}
-
-	return string(fileContents)
+	fmt.Print(string(fileContents))
 }
-
-func renderTemplate()
-=======
-import "fmt"
-
-func main() {
-	fmt.Println("Hello, world!")
-}
->>>>>>> 9514ac8a2c135a448a2b15a4b246dcd5d59ee7bf
