@@ -2,10 +2,11 @@ package main
 
 import (
 	//"fmt"
-
+	"flag"
 	"html/template"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 type fluff struct {
@@ -13,27 +14,18 @@ type fluff struct {
 }
 
 func main() {
-	// Files are provided as a slice of strings.
-	paths := []string{
-		"template.tmpl",
-	}
+	c := flag.String("file", "first-post.txt", "txt file to be read.")
+	flag.Parse()
 
-	post := readFile()
+	post := readFile(*c)
 
-	t := template.Must(template.New("template.tmpl").ParseFiles(paths...))
-	file, err := os.Create("first-post.html")
-	if err != nil {
-		panic(err)
-	}
+	newName := strings.Split(*c, ".")[0] + ".html"
 
-	err = t.Execute(file, post)
-	if err != nil {
-		panic(err)
-	}
+	writeFile(newName, post)
 }
 
-func readFile() string {
-	fileContents, err := ioutil.ReadFile("first-post.txt")
+func readFile(fileName string) string {
+	fileContents, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		panic(err)
 	}
@@ -41,11 +33,19 @@ func readFile() string {
 	return string(fileContents)
 }
 
-func writeFile(text string) {
-	bytesToWrite := []byte(text)
-	err := ioutil.WriteFile("first-post.html", bytesToWrite, 0644)
+func writeFile(fileName string, text string) {
+	paths := []string{
+		"template.tmpl",
+	}
+
+	t := template.Must(template.New("template.tmpl").ParseFiles(paths...))
+	file, err := os.Create(fileName)
 	if err != nil {
 		panic(err)
 	}
-	return
+
+	err = t.Execute(file, text)
+	if err != nil {
+		panic(err)
+	}
 }
